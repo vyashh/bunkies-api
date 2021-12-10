@@ -12,6 +12,14 @@ type Request = {
   params: { houseId: string };
 };
 
+
+// set start of week on monday
+moment.updateLocale('en', {
+  week: {
+    dow: 1,
+  },
+});
+
 const createSchedule = async (req: Request, res: Response) => {
   const {
     params: { houseId },
@@ -23,7 +31,7 @@ const createSchedule = async (req: Request, res: Response) => {
     var end = moment(nextDate);
 
     // let timeNow = ;
-    var day = 1;
+    var day = 0;
 
     var result = [];
     var current = currentDate.clone();
@@ -112,5 +120,26 @@ const getSchedule = async (req: Request, res: Response) => {
           .json({ message: "Something went wrong. Try again." });
       }
 };
+
+const test = async (req: Request, res: Response) => {
+  
+    try {
+      const weekNumber = moment('12/12/2021', "DD/MM/YYYY").startOf('week').week();
+
+  
+      return res.status(200).json({
+        status: "success",
+        data: weekNumber,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(500).json(error.message);
+      }
+      return res
+        .status(500)
+        .json({ message: "Something went wrong. Try again." });
+    }
+};
+
 
 export { createSchedule, getSchedule };
